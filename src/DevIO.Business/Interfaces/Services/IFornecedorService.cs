@@ -1,6 +1,6 @@
 ﻿using DevIO.Business.Models;
 
-namespace DevIO.Business.Interfaces;
+namespace DevIO.Business.Interfaces.Services;
 
 public interface IFornecedorService : IDisposable
 {

@@ -1,6 +1,4 @@
-﻿using DevIO.Business.Models;
-
-namespace DevIO.Business.ValueObjects;
+﻿namespace DevIO.Business.Models;
 
 public class Endereco : Entity
 {
