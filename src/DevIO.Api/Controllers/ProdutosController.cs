@@ -4,6 +4,7 @@ using DevIO.Business.Interfaces.Repositories;
 using DevIO.Business.Interfaces.Services;
 using DevIO.Business.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DevIO.Api.Controllers
 {
@@ -16,7 +17,8 @@ namespace DevIO.Api.Controllers
 
         public ProdutosController(IProdutoRepository produtoRepository,
             IProdutoService produtoService, 
-            IMapper mapper)
+            IMapper mapper, 
+            INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
@@ -46,7 +48,7 @@ namespace DevIO.Api.Controllers
 
             await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
 
-            return CustomeReponse(produtoViewModel);
+            return CustomeReponse(HttpStatusCode.Created, produtoViewModel);
 
         }
 
@@ -72,7 +74,7 @@ namespace DevIO.Api.Controllers
 
             await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
 
-            return CustomeReponse();
+            return CustomeReponse(HttpStatusCode.NoContent);
 
         }
 
@@ -85,7 +87,7 @@ namespace DevIO.Api.Controllers
 
             await _produtoRepository.Remover(id);
 
-            return CustomeReponse();
+            return CustomeReponse(HttpStatusCode.NoContent);
         }
 
         private async Task<ProdutoViewModel> ObterProduto(Guid id)

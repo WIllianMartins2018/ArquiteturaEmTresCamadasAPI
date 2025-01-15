@@ -6,6 +6,7 @@ using DevIO.Business.Models;
 using DevIO.Business.Services;
 using DevIO.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DevIO.Api.Controllers
 {
@@ -19,7 +20,8 @@ namespace DevIO.Api.Controllers
         public FornecedoresController(
             IFornecedorRepository fornecedorRepository,
             IFornecedorService fornecedorService,
-            IMapper mapper)
+            IMapper mapper, 
+            INotificador notificador) : base(notificador) 
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
@@ -47,9 +49,9 @@ namespace DevIO.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomeReponse(ModelState);
 
-            await _fornecedorRepository.Adicionar(_mapper.Map<Fornecedor>(fornecedorViewModel));
+            await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorViewModel));
 
-            return CustomeReponse(fornecedorViewModel);
+            return CustomeReponse(HttpStatusCode.Created,fornecedorViewModel);
         }
 
         [HttpPut("{id:guid}")]
@@ -64,9 +66,9 @@ namespace DevIO.Api.Controllers
 
             if (!ModelState.IsValid) return CustomeReponse(ModelState);
 
-            await _fornecedorRepository.Atualizar(_mapper.Map<Fornecedor>(fornecedorViewModel));
+            await _fornecedorService.Atualizar(_mapper.Map<Fornecedor>(fornecedorViewModel));
 
-            return CustomeReponse();
+            return CustomeReponse(HttpStatusCode.NoContent);
         }
 
         [HttpDelete("{id:guid}")]
@@ -76,9 +78,9 @@ namespace DevIO.Api.Controllers
 
             if (fornecedorViewModel is null) return NotFound();
 
-            await _fornecedorRepository.Remover(id);
+            await _fornecedorService.Remover(id);
 
-            return CustomeReponse();
+            return CustomeReponse(HttpStatusCode.NoContent);
         }
 
 
